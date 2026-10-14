@@ -52,6 +52,19 @@ La app no necesita variables de entorno: siempre llama a `/api` en su propio ori
 - Estados de **carga** (skeleton/spinner), **error con reintento**, **sin resultados** y **Pokémon no encontrado**.
 - Diseño responsive y modo oscuro según la preferencia del sistema.
 
+## Logs
+
+Los logs del frontend se escriben en la consola del navegador (DevTools → Console) con el formato `hora NIVEL [contexto] mensaje`:
+
+```
+16:00:40.057 INFO [HTTP] ← GET /api/pokemon?page=1&pageSize=24&search=bulba 200 (657ms) [79adb8b5-…]
+16:00:42.292 WARN [HTTP] ✕ GET /api/pokemon/noexiste 404 (360ms) [8a9a1efc-…]
+```
+
+- [`LoggerService`](src/app/core/logger.service.ts) es el único punto de salida. En desarrollo muestra desde `debug`; en el build de producción (Docker), desde `info`.
+- [`httpLoggingInterceptor`](src/app/core/http-logging.interceptor.ts) registra cada llamada al BFF con su status y duración (4xx como `WARN`; 5xx o sin conexión como `ERROR`). Además agrega un header `X-Request-Id`, que el BFF usa en sus propios logs y que nginx registra en su access log. Así, un request visto en el navegador se puede buscar con `docker compose logs | grep <id>`.
+- [`GlobalErrorHandler`](src/app/core/global-error-handler.ts) captura los errores no controlados de Angular, y los errores de navegación del router también quedan registrados.
+
 ## Decisiones técnicas
 
 - **La URL es la fuente de verdad** del listado (`/?q=char&page=2`). Búsquedas y páginas se pueden compartir, sobreviven a un reload, y "Volver al catálogo" regresa exactamente a donde estaba el usuario.
@@ -69,6 +82,7 @@ La app no necesita variables de entorno: siempre llama a `/api` en su propio ori
 - Los nombres de habilidades se muestran en inglés (así vienen de PokéAPI).
 - Sin tests end-to-end en navegador. Hay tests unitarios y de componentes (Vitest + `RouterTestingHarness` + `HttpTestingController`) que cubren el servicio, el listado con búsqueda y paginación desde la URL, los estados vacío y de error, y el detalle con su 404.
 - Sin SSR ni i18n formal; la UI está solo en español.
+- Los logs del frontend quedan en la consola del navegador; no se envían a un servidor. Como todo pasa por `LoggerService`, agregarlo sería un cambio en un solo lugar.
 
 ## Herramientas utilizadas
 

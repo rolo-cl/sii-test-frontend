@@ -1,5 +1,10 @@
+# Access log con el X-Request-Id que genera el frontend, para correlacionar con los logs del BFF.
+log_format with_request_id '$remote_addr [$time_local] "$request" $status $body_bytes_sent '
+                           '$request_time req_id=$http_x_request_id';
+
 server {
   listen 8080;
+  access_log /dev/stdout with_request_id;
   server_name _;
   root /usr/share/nginx/html;
   index index.html;
