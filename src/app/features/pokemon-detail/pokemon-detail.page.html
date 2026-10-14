@@ -1,0 +1,97 @@
+<button type="button" class="link back" (click)="back()">← Volver al catálogo</button>
+
+@let s = state();
+@if (s.status === 'loading') {
+  <div class="message">
+    <span class="spinner" role="status" aria-label="Cargando"></span>
+  </div>
+} @else if (s.status === 'error') {
+  <div class="message">
+    @if (s.notFound) {
+      <p>No encontramos un Pokémon llamado “{{ name() }}”.</p>
+      <a class="button" routerLink="/" [queryParams]="{ q: name() }">Buscar nombres parecidos</a>
+    } @else {
+      <p>No pudimos cargar la información. Intenta nuevamente.</p>
+      <button type="button" class="button" (click)="retry()">Reintentar</button>
+    }
+  </div>
+} @else {
+  @let p = s.data;
+  <article class="detail">
+    <div class="art">
+      @if (p.image) {
+        <img [src]="p.image" [alt]="p.name | humanize" width="320" height="320" />
+      }
+    </div>
+
+    <div class="info">
+      <header>
+        <span class="number">{{ p.id | dexNumber }}</span>
+        <h1>{{ p.name | humanize }}</h1>
+        @if (p.genus) {
+          <p class="genus">{{ p.genus }}</p>
+        }
+        <div class="types">
+          @for (type of p.types; track type) {
+            <app-type-badge [type]="type" />
+          }
+        </div>
+      </header>
+
+      @if (p.description) {
+        <p class="description">{{ p.description }}</p>
+      }
+
+      <dl class="facts">
+        <div>
+          <dt>Altura</dt>
+          <dd>{{ p.height }} m</dd>
+        </div>
+        <div>
+          <dt>Peso</dt>
+          <dd>{{ p.weight }} kg</dd>
+        </div>
+        <div>
+          <dt>Exp. base</dt>
+          <dd>{{ p.baseExperience ?? '—' }}</dd>
+        </div>
+      </dl>
+
+      <section>
+        <h2>Habilidades</h2>
+        <ul class="abilities">
+          @for (ability of p.abilities; track ability.name) {
+            <li>
+              {{ ability.name | humanize }}
+              @if (ability.hidden) {
+                <small>(oculta)</small>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section>
+        <h2>Estadísticas base</h2>
+        <table class="stats">
+          <tbody>
+            @for (stat of p.stats; track stat.name) {
+              <tr>
+                <th scope="row">{{ stat.name | statLabel }}</th>
+                <td class="value">{{ stat.value }}</td>
+                <td class="bar-cell">
+                  <div class="bar" [style.width.%]="statPercent(stat.value)"></div>
+                </td>
+              </tr>
+            }
+            <tr class="total">
+              <th scope="row">Total</th>
+              <td class="value">{{ totalStats() }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </article>
+}

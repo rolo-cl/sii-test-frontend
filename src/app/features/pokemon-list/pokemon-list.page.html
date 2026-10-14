@@ -1,0 +1,79 @@
+<section class="toolbar">
+  <div class="search">
+    <label for="search" class="visually-hidden">Buscar Pokémon por nombre</label>
+    <input
+      id="search"
+      type="search"
+      placeholder="Buscar por nombre, ej. pikachu"
+      autocomplete="off"
+      spellcheck="false"
+      [formControl]="searchControl"
+    />
+    @if (loading()) {
+      <span class="spinner" role="status" aria-label="Cargando"></span>
+    }
+  </div>
+
+  @if (result(); as page) {
+    <p class="summary" aria-live="polite">
+      @if (query().search) {
+        {{ page.count }} resultado{{ page.count === 1 ? '' : 's' }} para “{{ query().search }}”
+      } @else {
+        {{ page.count }} Pokémon
+      }
+    </p>
+  }
+</section>
+
+@if (failed()) {
+  <div class="message">
+    <p>No pudimos cargar el catálogo. Intenta nuevamente en unos segundos.</p>
+    <button type="button" class="button" (click)="retry()">Reintentar</button>
+  </div>
+} @else if (result(); as page) {
+  @if (page.results.length) {
+    <ul class="grid" [class.dimmed]="loading()">
+      @for (pokemon of page.results; track pokemon.id) {
+        <li><app-pokemon-card [pokemon]="pokemon" /></li>
+      }
+    </ul>
+
+    @if (page.totalPages > 1) {
+      <nav class="pagination" aria-label="Paginación">
+        <button
+          type="button"
+          class="button"
+          [disabled]="page.page <= 1 || loading()"
+          (click)="goToPage(page.page - 1)"
+        >
+          ← Anterior
+        </button>
+        <span>Página {{ page.page }} de {{ page.totalPages }}</span>
+        <button
+          type="button"
+          class="button"
+          [disabled]="page.page >= page.totalPages || loading()"
+          (click)="goToPage(page.page + 1)"
+        >
+          Siguiente →
+        </button>
+      </nav>
+    }
+  } @else if (page.count > 0) {
+    <div class="message">
+      <p>Esta página no existe.</p>
+      <button type="button" class="button" (click)="goToPage(1)">Ir a la primera página</button>
+    </div>
+  } @else {
+    <div class="message">
+      <p>No encontramos Pokémon cuyo nombre contenga “{{ query().search }}”.</p>
+      <button type="button" class="button" (click)="clearSearch()">Limpiar búsqueda</button>
+    </div>
+  }
+} @else {
+  <ul class="grid" aria-hidden="true">
+    @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+      <li class="skeleton"></li>
+    }
+  </ul>
+}
