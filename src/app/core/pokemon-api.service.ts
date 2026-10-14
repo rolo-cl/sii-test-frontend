@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { ListPokemonParams, PokemonDetail, PokemonPage } from './pokemon.models';
 
 /**
- * Talks only to the BFF. `/api` is relative: nginx (Docker) or the dev-server proxy
- * forward it to NestJS, so the app needs no environment-specific URLs or CORS.
+ * Solo habla con el BFF. `/api` es relativo: nginx (Docker) o el proxy del dev server lo
+ * reenvían a NestJS, así la app no necesita URLs por entorno ni CORS.
  */
 @Injectable({ providedIn: 'root' })
 export class PokemonApiService {

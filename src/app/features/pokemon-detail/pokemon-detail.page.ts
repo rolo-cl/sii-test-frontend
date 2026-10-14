@@ -9,7 +9,7 @@ import { PokemonDetail } from '../../core/pokemon.models';
 import { DexNumberPipe, HumanizePipe, StatLabelPipe } from '../../shared/pokemon-format';
 import { TypeBadge } from '../../shared/type-badge';
 
-/** Highest possible base stat in the games; used to scale the bars. */
+/** Estadística base máxima posible en los juegos; se usa para escalar las barras. */
 const MAX_BASE_STAT = 255;
 
 @Component({
@@ -25,7 +25,7 @@ export class PokemonDetailPage {
   private readonly location = inject(Location);
   private readonly retry$ = new Subject<void>();
 
-  /** Bound from the `:name` route param. */
+  /** Viene del parámetro de ruta `:name`. */
   readonly name = input.required<string>();
 
   protected readonly state = toSignal(
@@ -50,7 +50,7 @@ export class PokemonDetailPage {
     this.retry$.next();
   }
 
-  /** Returns to the list keeping its search/page when we came from it; otherwise goes home. */
+  /** Vuelve al listado conservando búsqueda y página si se llegó desde ahí; si no, va al inicio. */
   protected back(): void {
     const cameFromList = (history.state as { fromList?: boolean } | null)?.fromList;
     if (cameFromList) {

@@ -1,4 +1,4 @@
-// Mirrors the contracts exposed by the BFF (sii-test-backend).
+// Refleja los contratos que expone el BFF (sii-test-backend).
 
 export interface PokemonSummary {
   id: number;
@@ -28,9 +28,9 @@ export interface PokemonDetail {
   id: number;
   name: string;
   image: string | null;
-  /** Metres */
+  /** Metros */
   height: number;
-  /** Kilograms */
+  /** Kilogramos */
   weight: number;
   baseExperience: number | null;
   types: string[];

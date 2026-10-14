@@ -40,8 +40,8 @@ function readQuery(params: ParamMap): ListQuery {
 }
 
 /**
- * Catalog page. The URL (`?q=&page=`) is the single source of truth, so searches and
- * pages are shareable and survive reloads / back navigation.
+ * Página del catálogo. La URL (`?q=&page=`) es la única fuente de verdad, así las búsquedas
+ * y páginas se pueden compartir y sobreviven a recargas y a la navegación hacia atrás.
  */
 @Component({
   selector: 'app-pokemon-list-page',
@@ -72,7 +72,7 @@ export class PokemonListPage {
     { initialValue: { status: 'loading' } as LoadState<PokemonPage> },
   );
 
-  /** Last successful page, kept while the next one loads to avoid flicker. */
+  /** Última página cargada con éxito; se mantiene mientras carga la siguiente para evitar parpadeos. */
   protected readonly result = linkedSignal<LoadState<PokemonPage>, PokemonPage | null>({
     source: this.state,
     computation: (state, previous) => {
@@ -101,7 +101,7 @@ export class PokemonListPage {
         }
       });
 
-    // Keep the input in sync when the URL changes from outside (back/forward, links).
+    // Mantiene el input sincronizado cuando la URL cambia desde afuera (atrás/adelante, links).
     effect(() => {
       const { search } = this.query();
       if (this.searchControl.value.trim() !== search) {

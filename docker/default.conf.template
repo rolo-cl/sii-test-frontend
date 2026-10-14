@@ -4,7 +4,7 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
-  # Same-origin proxy to the BFF: the SPA calls /api/* and never needs CORS or a hardcoded URL.
+  # Proxy al BFF en el mismo origen: la SPA llama a /api/* y no necesita CORS ni URLs fijas.
   location /api/ {
     proxy_pass ${BFF_URL};
     proxy_http_version 1.1;
@@ -13,14 +13,14 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
-  # Hashed build assets can be cached forever.
+  # Los assets del build llevan hash en el nombre, así que se pueden cachear indefinidamente.
   location ~* \.(?:js|css|woff2?|ico|png|svg)$ {
     expires 1y;
     add_header Cache-Control "public, immutable";
     try_files $uri =404;
   }
 
-  # SPA fallback so deep links like /pokemon/pikachu work on reload.
+  # Fallback de la SPA para que links directos como /pokemon/pikachu funcionen al recargar.
   location / {
     add_header Cache-Control "no-cache";
     try_files $uri $uri/ /index.html;
