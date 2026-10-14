@@ -3,7 +3,8 @@
 @let s = state();
 @if (s.status === 'loading') {
   <div class="message">
-    <span class="spinner" role="status" aria-label="Cargando"></span>
+    <span class="spinner spinner-lg" role="status" aria-label="Cargando"></span>
+    <p>Cargando Pokémon…</p>
   </div>
 } @else if (s.status === 'error') {
   <div class="message">

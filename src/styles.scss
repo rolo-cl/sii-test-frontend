@@ -115,25 +115,37 @@ main.container {
   text-decoration: none;
 }
 
-.logo {
+/* Pokébola dibujada con CSS. Escala con font-size: 1em = diámetro.
+   Línea y franja siempre oscuras (como la real), también en modo oscuro. */
+.pokeball,
+.spinner {
+  --pokeball-line: #1d2130;
+
   position: relative;
-  width: 26px;
-  height: 26px;
-  border: 2px solid var(--text);
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  border: 0.08em solid var(--pokeball-line);
   border-radius: 50%;
-  background: linear-gradient(var(--accent) 0 45%, var(--text) 45% 55%, var(--surface) 55%);
+  background: linear-gradient(var(--accent) 0 44%, var(--pokeball-line) 44% 56%, #ffffff 56%);
 
   &::after {
     content: '';
     position: absolute;
     inset: 50% auto auto 50%;
-    width: 8px;
-    height: 8px;
-    margin: -4px 0 0 -4px;
-    border: 2px solid var(--text);
+    width: 0.34em;
+    height: 0.34em;
+    margin: -0.17em 0 0 -0.17em;
+    border: 0.08em solid var(--pokeball-line);
     border-radius: 50%;
-    background: var(--surface);
+    background: #ffffff;
+    box-sizing: border-box;
   }
+}
+
+.logo {
+  font-size: 26px;
 }
 
 .app-footer {
@@ -184,14 +196,20 @@ main.container {
   color: var(--muted);
 }
 
+/* Indicador de carga: la Pokébola gira con aceleración, como al lanzarla. */
 .spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  font-size: 1rem;
+  animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+
+  &.spinner-lg {
+    font-size: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.5s;
+  }
 }
 
 @keyframes spin {

@@ -9,7 +9,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     <header class="app-header">
       <div class="container">
         <a routerLink="/" class="brand">
-          <span class="logo" aria-hidden="true"></span>
+          <span class="pokeball logo" aria-hidden="true"></span>
           Explorador de Pokémon
         </a>
       </div>

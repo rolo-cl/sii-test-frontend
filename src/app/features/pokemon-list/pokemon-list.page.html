@@ -16,7 +16,9 @@
 
   @if (result(); as page) {
     <p class="summary" aria-live="polite">
-      @if (query().search) {
+      @if (loading()) {
+        Buscando…
+      } @else if (query().search) {
         {{ page.count }} resultado{{ page.count === 1 ? '' : 's' }} para “{{ query().search }}”
       } @else {
         {{ page.count }} Pokémon
